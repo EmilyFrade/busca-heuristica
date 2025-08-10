@@ -101,22 +101,35 @@ class HyruleAgent:
         if start == goal:
             return [start], 0
 
+        # Conjunto de nós a serem explorados
         open_set = [(0, start)]
+
+        # Dicionário para reconstruir o caminho
         came_from = {}
+
+        # g_score: custo acumulado do início até cada nó conhecido
         g_score = {start: 0}
+
+        # f_score: custo estimado total (g + h), onde h é a heurística
         f_score = {start: self.heuristic(start, goal)}
+
+        # Conjunto de nós já explorados
         closed_set = set()
 
         while open_set:
+            # Seleciona o nó com menor f_score
             current = heapq.heappop(open_set)[1]
 
+            # Se já foi processado, ignora
             if current in closed_set:
                 continue
-                
+                    
+            # Marca como explorado
             closed_set.add(current)
 
+            # Verifica se chegou ao destino
             if current == goal:
-                # Reconstrói o caminho
+                # Reconstrói o caminho percorrendo o dicionário came_from
                 path = []
                 while current in came_from:
                     path.append(current)
@@ -125,16 +138,23 @@ class HyruleAgent:
                 path.reverse()
                 return path, g_score[goal]
 
+            # Analisa os vizinhos válidos
             for neighbor in self.get_neighbors(current, grid):
                 if neighbor in closed_set:
                     continue
-                    
+
+                # Custo acumulado até o vizinho
                 tentative_g = g_score[current] + self.get_terrain_cost(grid[neighbor[0]][neighbor[1]])
 
+                # Se o vizinho nunca foi visitado ou encontramos um caminho mais barato
                 if neighbor not in g_score or tentative_g < g_score[neighbor]:
                     came_from[neighbor] = current
                     g_score[neighbor] = tentative_g
+
+                    # f_score = custo acumulado + estimativa heurística (distância Manhattan)
                     f_score[neighbor] = tentative_g + self.heuristic(neighbor, goal)
+
+                    # Adiciona à fila de prioridade para futura exploração
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
         return None, float('inf')
