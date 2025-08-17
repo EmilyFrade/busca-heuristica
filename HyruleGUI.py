@@ -111,8 +111,8 @@ class HyruleGUI:
 
     def run_adventure(self):
         try:
-            self.root.after(0, lambda: self.info_var.set("Calculando rota ótima"))
-            success = self.agent.solve_optimized()
+            self.root.after(0, lambda: self.info_var.set("Calculando rota ótima..."))
+            success = self.agent.solve_with_a_star()
 
             if success:
                 order_str = f"Masmorras {' → '.join(map(str, self.agent.best_order))}"
@@ -146,8 +146,8 @@ class HyruleGUI:
 
         # Rastro em rosa para destacar o caminho
         self.canvas.create_rectangle(x_pixel+2, y_pixel+2,
-                                   x_pixel+self.cell_size-2, y_pixel+self.cell_size-2,
-                                   fill='#FF69B4', outline='#FF1493', width=1, tags="path")
+                                     x_pixel+self.cell_size-2, y_pixel+self.cell_size-2,
+                                     fill='#FF69B4', outline='#FF1493', width=1, tags="path")
 
         # Link atual (remove o anterior)
         self.canvas.delete("link_current")
@@ -155,7 +155,7 @@ class HyruleGUI:
         link_x = x_pixel + self.cell_size // 2
         link_y = y_pixel + self.cell_size // 2
         self.canvas.create_oval(link_x-6, link_y-6, link_x+6, link_y+6,
-                               fill='#00FF00', outline='#008000', width=2, tags="link_current")
+                                fill='#00FF00', outline='#008000', width=2, tags="link_current")
 
         # Atualiza informações
         progress = (self.current_step + 1) / len(self.path_positions) * 100

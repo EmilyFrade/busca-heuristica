@@ -7,6 +7,10 @@ def main():
     try:
         print("Carregando mapas dos arquivos CSV...")
         agent.load_maps()
+        print("\nPosições especiais encontradas:")
+        print(f"  Link inicial: {agent.link_start}")
+        print(f"  Lost Woods: {agent.lost_woods}")
+        print(f"  Masmorras: {agent.dungeon_entrances}")
 
         print("\nAbrindo interface gráfica...")
         gui = HyruleGUI(agent)
